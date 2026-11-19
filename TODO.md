@@ -3,8 +3,8 @@
 ## Milestone 0: bootstrap
 
 - [x] Choose the working directory `E:\programs\dsh-think-twice`.
-- [ ] Create the GitHub repository early so the future listing has a repository age of at least one day.
-- [ ] Initialise the local repository and push the bootstrap documents.
+- [x] Create the GitHub repository early so the future listing has a repository age of at least one day: <https://github.com/SSHOOTING/dsh-think-twice>.
+- [x] Initialise the local repository and push the bootstrap documents.
 - [ ] At 12:00 on 2026-11-19, start the first implementable MVP slice.
 
 ## Milestone 1: first usable loop
