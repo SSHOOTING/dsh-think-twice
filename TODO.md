@@ -6,6 +6,9 @@
 - [x] Create the GitHub repository early so the future listing has a repository age of at least one day: <https://github.com/SSHOOTING/dsh-think-twice>.
 - [x] Initialise the local repository and push the bootstrap documents.
 - [x] At 12:00 on 2026-11-19, start the first implementable MVP slice.
+- [x] Publish `dsh-think-twice@0.1.2` to npm.
+- [x] Create GitHub Release `v0.1.2`.
+- [ ] Submit the prepared market entry after the repository reaches one full day of age.
 
 ## Milestone 1: first usable loop
 
