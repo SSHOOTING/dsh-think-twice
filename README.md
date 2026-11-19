@@ -38,6 +38,12 @@ flowchart LR
 
 ## 安装
 
+### 从 npm 安装（发布后）
+
+```powershell
+dsh plugin add dsh-think-twice
+```
+
 ### 本地开发链接
 
 ```powershell

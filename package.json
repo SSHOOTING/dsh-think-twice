@@ -4,6 +4,19 @@
   "description": "A question-first DSH composer plugin that reviews a draft without rewriting it.",
   "type": "module",
   "main": "index.js",
+  "author": "SSHOOTING",
+  "homepage": "https://github.com/SSHOOTING/dsh-think-twice#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SSHOOTING/dsh-think-twice.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SSHOOTING/dsh-think-twice/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
@@ -22,6 +35,7 @@
     "cordis.patch.yml",
     "icon.svg",
     "README.md",
+    "RELEASE-NOTES-v0.1.2.md",
     "LICENSE"
   ],
   "keywords": [
