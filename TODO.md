@@ -5,20 +5,22 @@
 - [x] Choose the working directory `E:\programs\dsh-think-twice`.
 - [x] Create the GitHub repository early so the future listing has a repository age of at least one day: <https://github.com/SSHOOTING/dsh-think-twice>.
 - [x] Initialise the local repository and push the bootstrap documents.
-- [ ] At 12:00 on 2026-11-19, start the first implementable MVP slice.
+- [x] At 12:00 on 2026-11-19, start the first implementable MVP slice.
 
 ## Milestone 1: first usable loop
 
-- [ ] Define the review contract: input text, message type, questions, evidence spans, confidence, and user actions.
-- [ ] Implement the three review passes:
-  - [ ] language: repetition, filler, self-correction, and meaning-changing sentence problems;
-  - [ ] logic: direct contradiction, time/scope/quantity conflict, and unsupported causal jumps;
-  - [ ] information: missing actor, action, object, deadline, condition, or success criteria.
-- [ ] Generate at most two high-impact questions per review.
-- [ ] Require every question to quote the relevant source text.
-- [ ] Add `helpful / inaccurate / edited` feedback for every question.
-- [ ] Save history locally, including the original text, user-edited text, questions, and feedback.
-- [ ] Keep a fast-writing mode that never blocks insertion.
+- [x] Define the review contract: input text, message type, questions, evidence spans, confidence, and user actions.
+- [x] Implement the three review passes:
+  - [x] language: repetition, filler, self-correction, and meaning-changing sentence problems;
+  - [x] logic: direct contradiction, time/scope/quantity conflict, and unsupported causal jumps;
+  - [x] information: missing actor, action, object, deadline, condition, or success criteria.
+- [x] Generate at most two high-impact questions per review.
+- [x] Require every question to quote the relevant source text.
+- [x] Add `helpful / inaccurate / edited` feedback for every question.
+- [x] Save history locally, including the original text, questions, and feedback.
+- [x] Keep a fast-writing mode that never blocks insertion.
+- [ ] Add a settings entry for inspecting and deleting local history.
+- [ ] Add integration tests with a mocked DSH model stream.
 
 ## Milestone 2: scoring and statistics
 

@@ -1,0 +1,17 @@
+# Bundle patch for dsh-think-twice.
+- insert:
+    - id: dsh-think-twice
+      name: dsh-think-twice
+      config:
+        # Leave provider/model empty to follow DSH's current default model.
+        provider: ''
+        model: ''
+        reasoningEffort: low
+        timeoutMs: 45000
+        maxRetries: 1
+        retryDelayMs: 500
+        # Optional override. When empty, prompts/review-system.md is used.
+        prompt: ''
+        # Optional override for <DSH_HOME>/dsh-think-twice/history.jsonl.
+        historyPath: ''
+
