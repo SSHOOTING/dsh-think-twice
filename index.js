@@ -7,6 +7,7 @@ import {
   fallbackReview,
   parseReviewResponse,
 } from './src/review.js'
+import { resolveSessionRoute } from './src/session-route.js'
 
 export const name = 'dsh-think-twice'
 export const inject = ['llm', 'agentDefaultModel']
@@ -79,15 +80,9 @@ function pickFallbackRoute(llm, selection) {
   }
 }
 
-async function resolveRoute(ctx, config) {
+async function resolveRoute(ctx, config, selection) {
   const configuredProvider = String(config.provider || '').trim()
   const configuredModel = String(config.model || '').trim()
-  const current = ctx.agentDefaultModel.currentSelection()
-  const selection = {
-    provider: configuredProvider || current.provider,
-    model: configuredModel || current.model,
-  }
-
   const route = pickFallbackRoute(ctx.llm, selection)
   const models = await ctx.llm.listModels(route.provider)
   if (models.length === 0) {
@@ -96,7 +91,47 @@ async function resolveRoute(ctx, config) {
   if (!route.model || !models.some((model) => model.id === route.model)) {
     route.model = models[0].id
   }
-  return route
+  return {
+    ...route,
+    model: configuredModel && route.selected ? configuredModel : route.model,
+  }
+}
+
+function candidateRoutes(ctx, config, sessionId) {
+  const configuredProvider = String(config.provider || '').trim()
+  const configuredModel = String(config.model || '').trim()
+  if (configuredProvider && configuredModel) {
+    return [{ provider: configuredProvider, model: configuredModel, source: 'config' }]
+  }
+
+  const current = ctx.agentDefaultModel.currentSelection()
+  const session = resolveSessionRoute({
+    sessionId,
+    dshHome: config.dshHome || process.env.DSH_HOME || process.cwd(),
+  })
+  const candidates = []
+  if (session) candidates.push({ ...session, source: 'session' })
+  if (current && current.provider && current.model) {
+    const duplicate = session
+      && session.provider === current.provider
+      && session.model === current.model
+    if (!duplicate) candidates.push({ ...current, source: 'default' })
+  }
+  return candidates
+}
+
+async function resolveRouteForSession(ctx, config, sessionId) {
+  const candidates = candidateRoutes(ctx, config, sessionId)
+  if (candidates.length === 0) throw new Error('没有可用的模型路由')
+  let lastError = null
+  for (const candidate of candidates) {
+    try {
+      return await resolveRoute(ctx, config, candidate)
+    } catch (error) {
+      lastError = error
+    }
+  }
+  throw lastError || new Error('没有可用的模型路由')
 }
 
 async function resolveReasoningEffort(ctx, route, config) {
@@ -153,7 +188,7 @@ class DshThinkTwiceRemote extends TypertRemoteService {
     const configuredDelay = Number(this.config.retryDelayMs)
     const maxRetries = Math.max(0, Math.min(3, Number.isFinite(configuredRetries) ? configuredRetries : 1))
     const retryDelayMs = Math.max(100, Number.isFinite(configuredDelay) ? configuredDelay : 500)
-    const route = await resolveRoute(this.ctx, this.config)
+    const route = await resolveRouteForSession(this.ctx, this.config, sessionId)
     const reasoningEffort = await resolveReasoningEffort(this.ctx, route, this.config)
     const system = String(this.config.prompt || '').trim() || DEFAULT_PROMPT
     let attempts = 0
@@ -213,6 +248,7 @@ class DshThinkTwiceRemote extends TypertRemoteService {
         return {
           ...parsed,
           route: `${route.provider}/${route.model}`,
+          routeSource: route.source || '',
           reasoningEffort: reasoningEffort === undefined ? null : String(reasoningEffort),
           attempts,
           elapsedMs: Date.now() - startedAt,
@@ -246,18 +282,26 @@ class DshThinkTwiceRemote extends TypertRemoteService {
     let parsed = null
     let modelError = ''
     let route = ''
+    let routeSource = ''
     let attempts = 0
     let elapsedMs = 0
 
     try {
       parsed = await this.reviewWithModel(text, sessionId)
       route = parsed.route
+      routeSource = parsed.routeSource
       attempts = parsed.attempts
       elapsedMs = parsed.elapsedMs
     } catch (error) {
       modelError = normalizedError(error)
       parsed = fallbackReview(text)
       elapsedMs = Date.now() - startedAt
+      parsed = {
+        ...parsed,
+        summary: parsed.questions.length === 0
+          ? '模型暂时没连上，本地规则也没有找到足够确定的问题。'
+          : '模型暂时没连上；下面只是本地规则能确认的问题。',
+      }
     }
 
     const questions = addQuestionIds(reviewId, parsed.questions)
@@ -270,6 +314,7 @@ class DshThinkTwiceRemote extends TypertRemoteService {
       degraded: Boolean(modelError),
       modelError,
       route,
+      routeSource,
       attempts,
       elapsedMs,
       historyPath: this.historyPath,
@@ -286,6 +331,7 @@ class DshThinkTwiceRemote extends TypertRemoteService {
       degraded: result.degraded,
       modelError: result.modelError,
       route: result.route,
+      routeSource: result.routeSource,
       attempts: result.attempts,
       elapsedMs: result.elapsedMs,
     })

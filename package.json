@@ -1,6 +1,6 @@
 {
   "name": "dsh-think-twice",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A question-first DSH composer plugin that reviews a draft without rewriting it.",
   "type": "module",
   "main": "index.js",
@@ -75,7 +75,7 @@
   },
   "scripts": {
     "test": "node --test test/*.test.js",
-    "check": "node --check index.js && node --check client.js && node --check remote.js && node --check src/review.js && node --check bin/review-demo.mjs",
+    "check": "node --check index.js && node --check client.js && node --check remote.js && node --check src/review.js && node --check src/session-route.js && node --check bin/review-demo.mjs",
     "demo": "node bin/review-demo.mjs"
   }
 }

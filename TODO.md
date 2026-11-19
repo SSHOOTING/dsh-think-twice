@@ -21,6 +21,7 @@
 - [x] Keep a fast-writing mode that never blocks insertion.
 - [ ] Add a settings entry for inspecting and deleting local history.
 - [ ] Add integration tests with a mocked DSH model stream.
+- [x] Prefer the current session's recorded model route over the process-wide default route.
 
 ## Milestone 2: scoring and statistics
 

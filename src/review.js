@@ -181,6 +181,10 @@ function repeatedFiller(text) {
 export function fallbackReview(source, maxQuestions = MAX_QUESTIONS) {
   const text = normalizeWhitespace(source)
   const questions = []
+  const generalQuestion = /[？?]/u.test(text)
+    && /(?:比较|分析|解释|说说|怎么|为什么|如何|评价|判断|看法|区别)/u.test(text)
+  const directRequest = /(?:^|[。！？\n])\s*(?:请|麻烦|帮忙|需要|要|能不能|可不可以|把|给我)/u.test(text)
+    || /(?:请|麻烦|帮忙)/u.test(text)
 
   const conflict = findConflictQuote(text)
   if (conflict) {
@@ -194,7 +198,7 @@ export function fallbackReview(source, maxQuestions = MAX_QUESTIONS) {
     })
   }
 
-  const bareReference = text.match(/(?:这个|那个|这件事|那件事|这些|那些|他们|她们|对方|那边)(?=[，。；！？\s]|尽|要|需要|可以|先|再|就|都|也|还|不|别|把|给|发|看|处理|安排)/u)
+  const bareReference = !generalQuestion && text.match(/(?:这个|那个|这件事|那件事|这些|那些|他们|她们|对方|那边)(?=[，。；！？\s]|尽|要|需要|可以|先|再|就|都|也|还|不|别|把|给|发|看|处理|安排)/u)
   if (bareReference) {
     addFallbackQuestion(questions, {
       layer: 'information',
@@ -207,7 +211,7 @@ export function fallbackReview(source, maxQuestions = MAX_QUESTIONS) {
   }
 
   const vagueTime = text.match(/(?:尽快|晚点|回头|到时候|过几天|之后|有空|抽空|看情况)/u)
-  if (vagueTime && /(?:请|麻烦|帮忙|需要|要|提交|确认|处理|安排|回复|完成|发|上线|弄|搞)/u.test(text)) {
+  if (directRequest && vagueTime && /(?:提交|确认|处理|安排|回复|完成|发|上线|弄|搞)/u.test(text)) {
     addFallbackQuestion(questions, {
       layer: 'information',
       severity: 'medium',
@@ -219,7 +223,7 @@ export function fallbackReview(source, maxQuestions = MAX_QUESTIONS) {
   }
 
   if (questions.length < maxQuestions
-    && /(?:请|麻烦|帮忙)/u.test(text)
+    && directRequest
     && /(?:发|提交|确认|处理|安排|回复|完成|上线|弄|搞)/u.test(text)
     && !hasExplicitTime(text)) {
     const quote = text.slice(0, Math.min(48, text.length))
@@ -234,7 +238,7 @@ export function fallbackReview(source, maxQuestions = MAX_QUESTIONS) {
   }
 
   const repetition = repeatedFiller(text)
-  if (questions.length < maxQuestions && repetition) {
+  if (questions.length < maxQuestions && repetition && !generalQuestion) {
     addFallbackQuestion(questions, {
       layer: 'language',
       severity: 'low',

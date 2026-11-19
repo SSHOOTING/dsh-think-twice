@@ -517,8 +517,10 @@ window.__ModuleLoader__.load({
       const headNote = state.status === 'reviewing'
         ? '检查语言、逻辑和信息是否足够让对方行动'
         : result && result.degraded
-          ? '模型不可用，已用本地规则给出高置信度问题'
-          : '只提问，不修改输入框'
+          ? '模型没连上；以下只是本地规则能确认的问题'
+          : result && result.route
+            ? `当前会话模型：${result.route} · 只提问，不修改输入框`
+            : '只提问，不修改输入框'
 
       return h('section', {
         className: 'dsh-think-panel',

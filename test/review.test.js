@@ -87,6 +87,11 @@ test('fallback stays silent for a clear short message', () => {
   assert.match(result.summary, /没有发现/)
 })
 
+test('fallback does not turn a general analysis question into a deadline complaint', () => {
+  const result = fallbackReview('你来比较一下不同的 Agent，他们对于沙箱权限的策略是什么？逻辑上怎么处理，用户体验怎么样？')
+  assert.equal(result.questions.length, 0)
+})
+
 test('question prompt wraps the draft and never asks for a rewrite', () => {
   const message = buildReviewUserMessage('把这个弄一下。')
   assert.match(message, /<draft>/)
