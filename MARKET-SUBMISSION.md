@@ -9,6 +9,7 @@ Market category: `ui`
 ## Gate status
 
 - [x] npm package published and `latest` points to `0.1.2`.
+- [x] `dsh plugin add dsh-think-twice@0.1.2` succeeds in the current DSH Web profile.
 - [x] GitHub repository is public and contains a GitHub Release.
 - [x] `package.json` declares `dsh.bundle.patch`.
 - [x] The repository has a real UI implementation and test coverage.

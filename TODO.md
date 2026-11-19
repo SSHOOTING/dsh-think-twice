@@ -8,6 +8,7 @@
 - [x] At 12:00 on 2026-11-19, start the first implementable MVP slice.
 - [x] Publish `dsh-think-twice@0.1.2` to npm.
 - [x] Create GitHub Release `v0.1.2`.
+- [x] Verify registry installation with `dsh plugin add dsh-think-twice@0.1.2`.
 - [ ] Submit the prepared market entry after the repository reaches one full day of age.
 
 ## Milestone 1: first usable loop
