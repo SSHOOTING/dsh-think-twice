@@ -1,6 +1,6 @@
 {
   "name": "dsh-think-twice",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A question-first DSH composer plugin that reviews a draft without rewriting it.",
   "type": "module",
   "main": "index.js",

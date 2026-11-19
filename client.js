@@ -309,6 +309,7 @@ window.__ModuleLoader__.load({
 
     const STATES = new Map()
     const LISTENERS = new Set()
+    const LIVE_DRAFTS = new Map()
 
     function initialState() {
       return {
@@ -442,8 +443,10 @@ window.__ModuleLoader__.load({
       h('path', { d: 'M5.4 6.1h5.2M5.4 8.2h3.4' }))
     }
 
-    function ThinkButton({ sessionId, useInput }) {
-      const draft = useInput((state) => state.draft)
+    function ThinkButton({ sessionId, useInput, input }) {
+      const subscribedDraft = useInput((state) => state.draft)
+      const draft = input?.draft ?? subscribedDraft
+      LIVE_DRAFTS.set(sessionId, draft)
       const draftRef = React.useRef(draft)
       draftRef.current = draft
       const state = useReviewState(sessionId)
@@ -500,8 +503,10 @@ window.__ModuleLoader__.load({
           }, feedback === 'inaccurate' ? '已标记：不准' : '不准')))
     }
 
-    function ThinkDock({ sessionId, useInput }) {
-      const draft = useInput((state) => state.draft)
+    function ThinkDock({ sessionId, useInput, input }) {
+      const subscribedDraft = useInput((state) => state.draft)
+      const draft = input?.draft ?? subscribedDraft
+      LIVE_DRAFTS.set(sessionId, draft)
       const draftRef = React.useRef(draft)
       draftRef.current = draft
       const state = useReviewState(sessionId)
@@ -509,9 +514,15 @@ window.__ModuleLoader__.load({
 
       const result = state.result
       const questions = result && Array.isArray(result.questions) ? result.questions : []
+      const liveDraft = LIVE_DRAFTS.has(sessionId)
+        ? LIVE_DRAFTS.get(sessionId)
+        : draft
       const close = () => publish(sessionId, { visible: false })
       const rerun = () => {
-        const text = String(draftRef.current || '').trim()
+        const latest = LIVE_DRAFTS.has(sessionId)
+          ? LIVE_DRAFTS.get(sessionId)
+          : draftRef.current
+        const text = String(latest || '').trim()
         if (text) void startReview(sessionId, text)
       }
       const headNote = state.status === 'reviewing'
@@ -585,7 +596,7 @@ window.__ModuleLoader__.load({
           h('button', {
             type: 'button',
             className: 'dsh-think-action',
-            disabled: state.status === 'reviewing' || String(draftRef.current || '').trim() === '',
+            disabled: state.status === 'reviewing' || String(liveDraft || '').trim() === '',
             onMouseDown: (event) => event.preventDefault(),
             onClick: rerun,
           }, '重新检查'),

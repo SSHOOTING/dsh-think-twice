@@ -19,6 +19,7 @@
 - [x] Add `helpful / inaccurate / edited` feedback for every question.
 - [x] Save history locally, including the original text, questions, and feedback.
 - [x] Keep a fast-writing mode that never blocks insertion.
+- [x] Recheck the live composer draft after the user edits, rather than a stale panel snapshot.
 - [ ] Add a settings entry for inspecting and deleting local history.
 - [ ] Add integration tests with a mocked DSH model stream.
 - [x] Prefer the current session's recorded model route over the process-wide default route.
