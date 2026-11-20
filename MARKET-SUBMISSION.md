@@ -13,7 +13,8 @@ Market category: `ui`
 - [x] GitHub repository is public and contains a GitHub Release.
 - [x] `package.json` declares `dsh.bundle.patch`.
 - [x] The repository has a real UI implementation and test coverage.
-- [ ] Repository age reaches one full day. Created 2026-11-19 11:41 Asia/Shanghai; submit after 2026-11-20 12:00 Asia/Shanghai.
+- [x] Repository age reaches one full day. Created 2026-11-19 11:41 Asia/Shanghai; submitted 2026-11-20 12:00 Asia/Shanghai.
+- [x] Market PR opened: <https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17130>.
 
 ## Submission file
 

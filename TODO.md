@@ -9,7 +9,7 @@
 - [x] Publish `dsh-think-twice@0.1.2` to npm.
 - [x] Create GitHub Release `v0.1.2`.
 - [x] Verify registry installation with `dsh plugin add dsh-think-twice@0.1.2`.
-- [ ] Submit the prepared market entry after the repository reaches one full day of age.
+- [x] Submit the prepared market entry after the repository reaches one full day of age: <https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17130>.
 
 ## Milestone 1: first usable loop
 
